@@ -41,7 +41,6 @@ genhtml coverage/lcov.info -o coverage
 
 
 ## TODO:
-- Display weather for the current day and next days
 - Write bloc tests
 - Write widget tests
-- Write unit tests for both packages, weather_api and weather_repository
+- Write unit tests weather_repository package
