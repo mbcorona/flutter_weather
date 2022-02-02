@@ -9,6 +9,7 @@ class Weather {
   final String main;
   final String description;
   final String icon;
+
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
       id: json['id'],
@@ -16,5 +17,14 @@ class Weather {
       description: json['description'],
       icon: json['icon'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'main': main,
+      'description': description,
+      'icon': icon,
+    };
   }
 }

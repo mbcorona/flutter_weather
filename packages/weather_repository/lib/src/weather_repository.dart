@@ -18,7 +18,7 @@ class WeatherRepository {
       response = await _weatherApiClient.currentWeatherByCoordinates(
           weather_api.Coord(lat: coord.lat, lon: coord.lon));
     } else {
-      response = await _weatherApiClient.currentWeatherByCity(city!);
+      response = await _weatherApiClient.currentWeatherByCity(city: city!);
     }
     final onecall = await _weatherApiClient.oneCallWeather(
       coord: response.coord,

@@ -27,4 +27,12 @@ class OnecallWeatherResponse {
   final OneCallWeather current;
   final List<OneCallWeather> hourly;
   final List<DailyWeather> daily;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'current': current.toJson(),
+      'hourly': hourly.map((e) => e.toJson()).toList(),
+      'daily': daily.map((e) => e.toJson()).toList(),
+    };
+  }
 }

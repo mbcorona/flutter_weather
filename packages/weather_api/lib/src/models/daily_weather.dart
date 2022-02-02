@@ -20,4 +20,13 @@ class DailyWeather {
   final double temp;
   final double feelsLike;
   final Weather weather;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'dt': dateTime,
+      'temp': {'day': temp},
+      'feels_like': {'day': feelsLike},
+      'weather': [weather.toJson()],
+    };
+  }
 }

@@ -12,4 +12,10 @@ class Coord {
       lon: json['lon'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'lat': lat,
+      'lon': lon
+    };
+  }
 }

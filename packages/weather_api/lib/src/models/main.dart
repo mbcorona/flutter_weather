@@ -18,4 +18,13 @@ class Main {
       tempMax: json['temp_max'] * 1.0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'temp': temp,
+      'feels_like': feelsLike,
+      'temp_min': tempMin,
+      'temp_max': tempMax,
+    };
+  }
 }

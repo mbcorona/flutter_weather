@@ -20,4 +20,13 @@ class OneCallWeather {
   final double temp;
   final double feelsLike;
   final Weather weather;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'dt': dateTime,
+      'temp': temp,
+      'feels_like': feelsLike,
+      'weather': [weather.toJson()],
+    };
+  }
 }

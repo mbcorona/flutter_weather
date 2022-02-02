@@ -23,4 +23,14 @@ class CurrentWeatherResponse {
       main: Main.fromJson(json['main']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'dt': dateTime,
+      'weather': [weather.toJson()],
+      'coord': coord.toJson(),
+      'main': main.toJson(),
+    };
+  }
 }

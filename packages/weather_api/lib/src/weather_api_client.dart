@@ -16,11 +16,11 @@ class WeatherApiClient {
   final http.Client _httpClient;
   static const _baseUrl = "api.openweathermap.org";
 
-  Future<CurrentWeatherResponse> currentWeatherByCity(String city) async {
+  Future<CurrentWeatherResponse> currentWeatherByCity({required String city, String units = 'metric'}) async {
     final request = Uri.https(
       _baseUrl,
       '/data/2.5/weather',
-      <String, String>{'q': city, 'appid': apiKey, 'units': 'metric'},
+      <String, String>{'q': city, 'appid': apiKey, 'units': units},
     );
 
     final response = await _httpClient.get(request);
