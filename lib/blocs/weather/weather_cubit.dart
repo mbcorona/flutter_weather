@@ -1,6 +1,7 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:weather_repository/weather_repository.dart'
-    show WeatherRepository, Coord;
+    as weather_repository;
+import 'package:weather_stokkur/models/models.dart';
 import 'package:weather_stokkur/models/weather.dart';
 import 'package:weather_stokkur/services/location_service.dart';
 
@@ -8,12 +9,13 @@ part 'weather_state.dart';
 
 class WeatherCubit extends HydratedCubit<WeatherState> {
   WeatherCubit(
-      {required WeatherRepository weatherRepository, LocationService? location})
+      {required weather_repository.WeatherRepository weatherRepository,
+      LocationService? location})
       : _weatherRepository = weatherRepository,
         _location = location ?? LocationService(),
         super(WeatherState());
 
-  final WeatherRepository _weatherRepository;
+  final weather_repository.WeatherRepository _weatherRepository;
   final LocationService _location;
 
   @override
@@ -26,20 +28,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
 
     try {
       final weather = await _weatherRepository.currentWeather(city: city);
-      emit(
-        state.copyWith(
-          status: WeatherStatus.success,
-          weather: Weather(
-            name: weather.name,
-            main: weather.main,
-            description: weather.description,
-            temp: weather.temp,
-            feelsLike: weather.feelsLike,
-            tempMin: weather.tempMin,
-            tempMax: weather.tempMax,
-          ),
-        ),
-      );
+      _handleRepositoryResponse(weather);
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
     }
@@ -54,27 +43,57 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         return;
       }
       final weather = await _weatherRepository.currentWeather(
-          coord: Coord(
+          coord: weather_repository.Coord(
         lat: location.latitude!,
         lon: location.longitude!,
       ));
-      emit(
-        state.copyWith(
-          status: WeatherStatus.success,
-          weather: Weather(
-            name: weather.name,
-            main: weather.main,
-            description: weather.description,
-            temp: weather.temp,
-            feelsLike: weather.feelsLike,
-            tempMin: weather.tempMin,
-            tempMax: weather.tempMax,
-          ),
-        ),
-      );
+      _handleRepositoryResponse(weather);
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
     }
+  }
+
+  void _handleRepositoryResponse(weather_repository.Weather weather) {
+    emit(
+      state.copyWith(
+        status: WeatherStatus.success,
+        weather: Weather(
+          name: weather.name,
+          main: weather.main,
+          description: weather.description,
+          temp: weather.temp,
+          feelsLike: weather.feelsLike,
+          tempMin: weather.tempMin,
+          tempMax: weather.tempMax,
+          hourly: weather.hourly
+              .map(
+                (e) => ForecastWeather(
+                  id: e.id,
+                  main: e.main,
+                  description: e.description,
+                  icon: e.icon,
+                  dateTime: e.dateTime,
+                  temp: e.temp,
+                  feelsLike: e.feelsLike,
+                ),
+              )
+              .toList(),
+          daily: weather.daily
+              .map(
+                (e) => ForecastWeather(
+                  id: e.id,
+                  main: e.main,
+                  description: e.description,
+                  icon: e.icon,
+                  dateTime: e.dateTime,
+                  temp: e.temp,
+                  feelsLike: e.feelsLike,
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
   }
 
   @override

@@ -69,6 +69,10 @@ class WeatherApiClient {
     throw WeatherRequestExeption();
   }
 
+  String getIconUrl(String icon) {
+    return 'http://openweathermap.org/img/wn/$icon@2x.png';
+  }
+
   CurrentWeatherResponse _handleCurrentWeatherResponse(http.Response response) {
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body);

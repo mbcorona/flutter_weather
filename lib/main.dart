@@ -5,7 +5,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:weather_repository/weather_repository.dart';
 import 'package:weather_stokkur/blocs/weather/weather_cubit.dart';
-import 'package:weather_stokkur/pages/weather_page.dart';
+import 'package:weather_stokkur/pages/weather/weather_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

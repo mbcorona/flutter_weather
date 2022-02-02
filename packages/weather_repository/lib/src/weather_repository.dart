@@ -20,9 +20,9 @@ class WeatherRepository {
     } else {
       response = await _weatherApiClient.currentWeatherByCity(city!);
     }
-
-    final onecall =
-        await _weatherApiClient.oneCallWeather(coord: response.coord);
+    final onecall = await _weatherApiClient.oneCallWeather(
+      coord: response.coord,
+    );
 
     return Weather(
       name: response.name,
@@ -39,7 +39,7 @@ class WeatherRepository {
               id: e.weather.id,
               main: e.weather.main,
               description: e.weather.description,
-              icon: e.weather.icon,
+              icon: _weatherApiClient.getIconUrl(e.weather.icon),
               dateTime: e.dateTime,
               temp: e.temp,
               feelsLike: e.feelsLike,
@@ -52,7 +52,7 @@ class WeatherRepository {
               id: e.weather.id,
               main: e.weather.main,
               description: e.weather.description,
-              icon: e.weather.icon,
+              icon: _weatherApiClient.getIconUrl(e.weather.icon),
               dateTime: e.dateTime,
               temp: e.temp,
               feelsLike: e.feelsLike,

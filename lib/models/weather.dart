@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_stokkur/models/models.dart';
 
 class Weather {
   Weather({
@@ -9,6 +10,8 @@ class Weather {
     required this.feelsLike,
     required this.tempMin,
     required this.tempMax,
+    this.hourly = const [],
+    this.daily = const [],
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
@@ -20,6 +23,12 @@ class Weather {
       feelsLike: json['feelsLike'],
       tempMin: json['tempMin'],
       tempMax: json['tempMax'],
+      hourly: (json['hourly'] as List)
+          .map((e) => ForecastWeather.fromJson(e))
+          .toList(),
+      daily: (json['daily'] as List)
+          .map((e) => ForecastWeather.fromJson(e))
+          .toList(),
     );
   }
 
@@ -30,6 +39,9 @@ class Weather {
   final double feelsLike;
   final double tempMin;
   final double tempMax;
+
+  final List<ForecastWeather> hourly;
+  final List<ForecastWeather> daily;
 
   String get asset {
     switch (main) {
@@ -71,6 +83,8 @@ class Weather {
       'feelsLike': feelsLike,
       'tempMin': tempMin,
       'tempMax': tempMax,
+      'hourly': hourly.map((e) => e.toJson()).toList(),
+      'daily': daily.map((e) => e.toJson()).toList(),
     };
   }
 }

@@ -1,1 +1,1 @@
-const animationDuration = Duration(milliseconds: 1500);
+const animationDuration = Duration(milliseconds: 1000);
