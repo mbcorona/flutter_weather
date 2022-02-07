@@ -15,7 +15,9 @@ void main() async {
         : await getTemporaryDirectory(),
   );
   HydratedBlocOverrides.runZoned(
-    () => runApp(WeatherApp(weatherRepository: WeatherRepository(apiKey: "f84c0cf53b69e3addc6d4e2349bcf5cf"))),
+    () => runApp(WeatherApp(
+        weatherRepository:
+            WeatherRepository(apiKey: "f84c0cf53b69e3addc6d4e2349bcf5cf"))),
     storage: storage,
   );
 }
@@ -29,12 +31,29 @@ class WeatherApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Weather Stokkur',
-      theme: ThemeData(),
-      home: BlocProvider(
-        create: (context) => WeatherCubit(weatherRepository: _weatherRepository),
-        child: const WeatherPage(),
+    return RepositoryProvider.value(
+      value: _weatherRepository,
+      child: const WeatherAppView(),
+    );
+  }
+}
+
+class WeatherAppView extends StatelessWidget {
+  const WeatherAppView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => WeatherCubit(
+        weatherRepository: context.read<WeatherRepository>(),
+      ),
+      child: MaterialApp(
+        title: 'Weather Stokkur',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+        ),
+        home: const WeatherPage(),
       ),
     );
   }

@@ -1,8 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:weather_repository/weather_repository.dart'
     as weather_repository;
 import 'package:weather_stokkur/models/models.dart';
-import 'package:weather_stokkur/models/weather.dart';
 import 'package:weather_stokkur/services/location_service.dart';
 
 part 'weather_state.dart';
@@ -13,7 +13,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       LocationService? location})
       : _weatherRepository = weatherRepository,
         _location = location ?? LocationService(),
-        super(WeatherState());
+        super(const WeatherState());
 
   final weather_repository.WeatherRepository _weatherRepository;
   final LocationService _location;
@@ -43,14 +43,22 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         return;
       }
       final weather = await _weatherRepository.currentWeather(
-          coord: weather_repository.Coord(
-        lat: location.latitude!,
-        lon: location.longitude!,
-      ));
+        coord: weather_repository.Coord(
+          lat: location.latitude!,
+          lon: location.longitude!,
+        ),
+      );
       _handleRepositoryResponse(weather);
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
     }
+  }
+
+  Future<void> selectDay(int day) async {
+    if (state.weather == null || day < 0 || day > state.weather!.daily.length) {
+      return;
+    }
+    emit(state.copyWith(daySelected: day));
   }
 
   void _handleRepositoryResponse(weather_repository.Weather weather) {
@@ -75,6 +83,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
                   dateTime: e.dateTime,
                   temp: e.temp,
                   feelsLike: e.feelsLike,
+                  max: e.max,
+                  min: e.min,
                 ),
               )
               .toList(),
@@ -88,6 +98,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
                   dateTime: e.dateTime,
                   temp: e.temp,
                   feelsLike: e.feelsLike,
+                  max: e.max,
+                  min: e.min,
                 ),
               )
               .toList(),

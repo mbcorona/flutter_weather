@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_stokkur/blocs/weather/weather_cubit.dart';
 import 'package:weather_stokkur/common/constants.dart';
 
-import 'widgets/weather_view.dart';
+import 'widgets/current_weather_view.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class WeatherPage extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: state.weather?.gradient ??
+                    colors: state.weather?.daily[state.daySelected].gradient ??
                         [Colors.orange, Colors.amber],
                   ),
                 ),
@@ -33,73 +33,31 @@ class WeatherPage extends StatelessWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(25),
-              child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(.8),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Search city...",
-                                  isDense: true),
-                              onSubmitted: (value) {
-                                context
-                                    .read<WeatherCubit>()
-                                    .currentWeatherByCity(value);
-                              },
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            context
-                                .read<WeatherCubit>()
-                                .currentWeatherByGeolocation();
-                          },
-                          icon: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.white,
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Icon(
-                              Icons.gps_fixed_outlined,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    BlocBuilder<WeatherCubit, WeatherState>(
-                      builder: (context, state) {
-                        return AnimatedSwitcher(
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+                    child: SearchBar(),
+                  ),
+                  BlocBuilder<WeatherCubit, WeatherState>(
+                    builder: (context, state) {
+                      return Expanded(
+                        child: AnimatedSwitcher(
                           switchInCurve: Curves.easeOut,
                           switchOutCurve: Curves.easeIn,
                           duration: animationDuration,
                           child: Builder(
-                            key: Key('${state.status}_${state.weather?.name}'),
+                            key: Key('${state.weather?.name}'),
                             builder: (_) {
                               if (state.status.isFailure) {
                                 return const Text("Something went wrong");
                               }
 
                               if (state.weather != null) {
-                                return WeatherView(
+                                return CurrentWeatherView(
                                   weather: state.weather!,
                                 );
                               }
@@ -107,16 +65,103 @@ class WeatherPage extends StatelessWidget {
                               return const SizedBox.shrink();
                             },
                           ),
-                        );
-                      },
-                    )
-                  ],
-                ),
+                        ),
+                      );
+                    },
+                  )
+                ],
               ),
             ),
           )
         ],
       ),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  const SearchBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _searchCtrl = TextEditingController();
+    return Row(
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.8),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: TextField(
+                  controller: _searchCtrl,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search city...",
+                    isDense: true,
+                  ),
+                  onSubmitted: (value) {
+                    context.read<WeatherCubit>().currentWeatherByCity(value);
+                  },
+                ),
+              ),
+              BlocBuilder<WeatherCubit, WeatherState>(
+                builder: (context, state) {
+                  return Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: state.status.isLoading
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(5),
+                              bottomRight: Radius.circular(5),
+                            ),
+                            child: LinearProgressIndicator(
+                              backgroundColor: state.weather
+                                  ?.daily[state.daySelected].gradient[0],
+                              color: state.weather?.daily[state.daySelected]
+                                  .gradient[1],
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            _searchCtrl.clear();
+            context.read<WeatherCubit>().currentWeatherByGeolocation();
+          },
+          icon: BlocBuilder<WeatherCubit, WeatherState>(
+            builder: (context, state) {
+              return Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: state.weather != null && _searchCtrl.text.isEmpty
+                      ? Colors.white
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Icon(
+                  Icons.near_me_rounded,
+                ),
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 }

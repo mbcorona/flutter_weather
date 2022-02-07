@@ -6,6 +6,8 @@ class ForecastWeather {
     required this.icon,
     required this.dateTime,
     required this.temp,
+    required this.max,
+    required this.min,
     required this.feelsLike,
   });
 
@@ -15,5 +17,7 @@ class ForecastWeather {
   final String icon;
   final int dateTime;
   final double temp;
+  final double max;
+  final double min;
   final double feelsLike;
 }

@@ -43,6 +43,8 @@ class WeatherRepository {
               dateTime: e.dateTime,
               temp: e.temp,
               feelsLike: e.feelsLike,
+              max: 0,
+              min: 0,
             ),
           )
           .toList(),
@@ -56,6 +58,8 @@ class WeatherRepository {
               dateTime: e.dateTime,
               temp: e.temp,
               feelsLike: e.feelsLike,
+              max: e.max,
+              min: e.min,
             ),
           )
           .toList(),

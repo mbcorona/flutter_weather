@@ -1,5 +1,3 @@
-import 'package:weather_api/src/models/daily_weather.dart';
-import 'package:weather_api/src/models/onecall_weather_response.dart';
 import 'package:weather_api/weather_api.dart';
 
 final currentWeatherResponse = CurrentWeatherResponse(
@@ -49,6 +47,8 @@ final oneCallWeatherResponse = OnecallWeatherResponse(
     DailyWeather(
       dateTime: DateTime.now().millisecondsSinceEpoch,
       temp: 20.0,
+      max: 23,
+      min: 21,
       feelsLike: 21.0,
       weather: Weather(
         main: 'Clouds',

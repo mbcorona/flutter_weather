@@ -16,10 +16,11 @@ const weatherStatusEnumMap = {
   WeatherStatus.failure: 'failure',
 };
 
-class WeatherState {
-  WeatherState({
+class WeatherState extends Equatable {
+  const WeatherState({
     this.status = WeatherStatus.initial,
     this.weather,
+    this.daySelected = 0,
   });
 
   factory WeatherState.fromJson(Map<String, dynamic> json) {
@@ -35,14 +36,17 @@ class WeatherState {
 
   final WeatherStatus status;
   final Weather? weather;
+  final int daySelected;
 
   WeatherState copyWith({
     WeatherStatus? status,
     Weather? weather,
+    int? daySelected,
   }) {
     return WeatherState(
       status: status ?? this.status,
       weather: weather ?? this.weather,
+      daySelected: daySelected ?? this.daySelected,
     );
   }
 
@@ -52,4 +56,7 @@ class WeatherState {
       'weather': weather?.toJson(),
     };
   }
+
+  @override
+  List<Object?> get props => [status, weather, daySelected];
 }
