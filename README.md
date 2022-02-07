@@ -43,4 +43,3 @@ genhtml coverage/lcov.info -o coverage
 ## TODO:
 - Write bloc tests
 - Write widget tests
-- Write unit tests weather_repository package

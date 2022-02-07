@@ -27,7 +27,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     emit(state.copyWith(status: WeatherStatus.loading));
 
     try {
-      final weather = await _weatherRepository.currentWeather(city: city);
+      final weather = await _weatherRepository.getWeather(city: city);
       _handleRepositoryResponse(weather);
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
@@ -42,7 +42,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       if (location == null) {
         return;
       }
-      final weather = await _weatherRepository.currentWeather(
+      final weather = await _weatherRepository.getWeather(
         coord: weather_repository.Coord(
           lat: location.latitude!,
           lon: location.longitude!,

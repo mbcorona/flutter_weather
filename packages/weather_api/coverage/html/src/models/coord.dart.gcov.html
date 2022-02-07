@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-02-02 09:31:51</td>
+            <td class="headerValue">2022-02-07 00:10:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,8 +70,8 @@
 <a name="8"><span class="lineNum">       8 </span>            : </a>
 <a name="9"><span class="lineNum">       9 </span><span class="lineCov">          1 :   factory Coord.fromJson(Map&lt;String, dynamic&gt; json) {</span></a>
 <a name="10"><span class="lineNum">      10 </span><span class="lineCov">          1 :     return Coord(</span></a>
-<a name="11"><span class="lineNum">      11 </span><span class="lineCov">          1 :       lat: json['lat'],</span></a>
-<a name="12"><span class="lineNum">      12 </span><span class="lineCov">          1 :       lon: json['lon'],</span></a>
+<a name="11"><span class="lineNum">      11 </span><span class="lineCov">          2 :       lat: json['lat']*1.0,</span></a>
+<a name="12"><span class="lineNum">      12 </span><span class="lineCov">          2 :       lon: json['lon']*1.0,</span></a>
 <a name="13"><span class="lineNum">      13 </span>            :     );</a>
 <a name="14"><span class="lineNum">      14 </span>            :   }</a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineCov">          1 :   Map&lt;String, dynamic&gt; toJson() {</span></a>

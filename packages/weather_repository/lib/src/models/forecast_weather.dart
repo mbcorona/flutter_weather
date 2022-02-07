@@ -14,7 +14,7 @@ class ForecastWeather {
   final int id;
   final String main;
   final String description;
-  final String icon;
+  String icon;
   final int dateTime;
   final double temp;
   final double max;
