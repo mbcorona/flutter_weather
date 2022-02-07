@@ -10,9 +10,9 @@ part 'weather_state.dart';
 class WeatherCubit extends HydratedCubit<WeatherState> {
   WeatherCubit(
       {required weather_repository.WeatherRepository weatherRepository,
-      LocationService? location})
+      LocationService? locationService})
       : _weatherRepository = weatherRepository,
-        _location = location ?? LocationService(),
+        _location = locationService ?? LocationService(),
         super(const WeatherState());
 
   final weather_repository.WeatherRepository _weatherRepository;
@@ -65,45 +65,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     emit(
       state.copyWith(
         status: WeatherStatus.success,
-        weather: Weather(
-          name: weather.name,
-          main: weather.main,
-          description: weather.description,
-          temp: weather.temp,
-          feelsLike: weather.feelsLike,
-          tempMin: weather.tempMin,
-          tempMax: weather.tempMax,
-          hourly: weather.hourly
-              .map(
-                (e) => ForecastWeather(
-                  id: e.id,
-                  main: e.main,
-                  description: e.description,
-                  icon: e.icon,
-                  dateTime: e.dateTime,
-                  temp: e.temp,
-                  feelsLike: e.feelsLike,
-                  max: e.max,
-                  min: e.min,
-                ),
-              )
-              .toList(),
-          daily: weather.daily
-              .map(
-                (e) => ForecastWeather(
-                  id: e.id,
-                  main: e.main,
-                  description: e.description,
-                  icon: e.icon,
-                  dateTime: e.dateTime,
-                  temp: e.temp,
-                  feelsLike: e.feelsLike,
-                  max: e.max,
-                  min: e.min,
-                ),
-              )
-              .toList(),
-        ),
+        weather: Weather.fromRepository(weather),
       ),
     );
   }

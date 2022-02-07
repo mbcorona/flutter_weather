@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:weather_stokkur/models/models.dart';
+import 'package:weather_repository/weather_repository.dart'
+    as weather_repository show Weather;
 
 class Weather {
   Weather({
@@ -28,6 +29,48 @@ class Weather {
           .toList(),
       daily: (json['daily'] as List)
           .map((e) => ForecastWeather.fromJson(e))
+          .toList(),
+    );
+  }
+
+  factory Weather.fromRepository(weather_repository.Weather weather) {
+    return Weather(
+      name: weather.name,
+      main: weather.main,
+      description: weather.description,
+      temp: weather.temp,
+      feelsLike: weather.feelsLike,
+      tempMin: weather.tempMin,
+      tempMax: weather.tempMax,
+      hourly: weather.hourly
+          .map(
+            (e) => ForecastWeather(
+              id: e.id,
+              main: e.main,
+              description: e.description,
+              icon: e.icon,
+              dateTime: e.dateTime,
+              temp: e.temp,
+              feelsLike: e.feelsLike,
+              max: e.max,
+              min: e.min,
+            ),
+          )
+          .toList(),
+      daily: weather.daily
+          .map(
+            (e) => ForecastWeather(
+              id: e.id,
+              main: e.main,
+              description: e.description,
+              icon: e.icon,
+              dateTime: e.dateTime,
+              temp: e.temp,
+              feelsLike: e.feelsLike,
+              max: e.max,
+              min: e.min,
+            ),
+          )
           .toList(),
     );
   }
