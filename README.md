@@ -41,5 +41,5 @@ genhtml coverage/lcov.info -o coverage
 
 
 ## TODO:
-- Write bloc tests
-- Write widget tests
+- Finish writing bloc tests
+- Finish writing widget tests
